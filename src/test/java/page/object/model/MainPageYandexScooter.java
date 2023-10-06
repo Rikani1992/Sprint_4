@@ -21,10 +21,6 @@ public class MainPageYandexScooter {
     //Кнопка заказа в середине страницы
     private final By middleSectionOrderButton = By.className("Button_Middle__1CSJM");
 
-    public MainPageYandexScooter(WebDriver driver, String questionText, String answerText) {
-        this.driver = driver;
-    }
-
     public MainPageYandexScooter(WebDriver driver) {
         this.driver = driver;
     }
