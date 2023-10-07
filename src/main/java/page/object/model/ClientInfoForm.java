@@ -11,7 +11,7 @@ public class ClientInfoForm {
     private final WebDriver driver;
 
     // Форма оформления заказа
-    private final By customerInfoForm = By.className("Order_Content__bmtHS");
+    private final By clientInfoForm = By.className("Order_Content__bmtHS");
 
     // Имя
     private final By firstNameField = By.xpath(".//input[@placeholder='* Имя']");
@@ -64,7 +64,11 @@ public class ClientInfoForm {
 
     public void waitForClientInfoFormDisplayed() {
         new WebDriverWait(driver, 2).until(
-                ExpectedConditions.visibilityOfElementLocated(customerInfoForm));
+                ExpectedConditions.visibilityOfElementLocated(clientInfoForm));
+    }
+
+    public boolean isClientInfoFormDisplayed() {
+        return driver.findElement(clientInfoForm).isDisplayed();
     }
 
     public void fillCustomerInfoForm(String firstName, String secondName,

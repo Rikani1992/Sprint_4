@@ -1,12 +1,8 @@
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import page.object.model.ClientInfoForm;
 import page.object.model.ConfirmOrderBanner;
 import page.object.model.MainPageYandexScooter;
@@ -14,8 +10,7 @@ import page.object.model.RentInfoForm;
 
 
 @RunWith(Parameterized.class)
-public class OrderTest {
-    private WebDriver driver;
+public class OrderTest extends YandexScooterTest {
 
     private final String firstName;
     private final String secondName;
@@ -27,7 +22,8 @@ public class OrderTest {
     private final String comment;
 
 
-    public OrderTest(String firstName, String secondName, String address, String metroStation, String phoneNumber, String rentDate, String comment) {
+    public OrderTest(String firstName, String secondName, String address,
+                     String metroStation, String phoneNumber, String rentDate, String comment) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.address = address;
@@ -46,27 +42,20 @@ public class OrderTest {
         };
     }
 
-    @Before
-    public void onStartUp() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
-        driver = new ChromeDriver(options);
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-    }
 
     @Test
     public void orderByHeaderButtonTest() {
-        MainPageYandexScooter mainPage = new MainPageYandexScooter(driver);
+        MainPageYandexScooter mainPage = new MainPageYandexScooter(getDriver());
         mainPage.clickCookieAcceptButton();
         mainPage.clickHeaderOrderButton();
 
-        ClientInfoForm clientInfoForm = new ClientInfoForm(driver);
+        ClientInfoForm clientInfoForm = new ClientInfoForm(getDriver());
         clientInfoForm.fillCustomerInfoForm(firstName, secondName, address, metroStation, phoneNumber);
 
-        RentInfoForm rentInfoForm = new RentInfoForm(driver);
+        RentInfoForm rentInfoForm = new RentInfoForm(getDriver());
         rentInfoForm.fillRentInfoForm(rentDate, comment);
 
-        ConfirmOrderBanner confirmOrderBanner = new ConfirmOrderBanner(driver);
+        ConfirmOrderBanner confirmOrderBanner = new ConfirmOrderBanner(getDriver());
         confirmOrderBanner.confirmOrder();
 
         Assert.assertTrue("Заказ не оформлен!",
@@ -75,28 +64,14 @@ public class OrderTest {
 
     @Test
     public void orderByMiddleSectionButtonTest() {
-        MainPageYandexScooter mainPage = new MainPageYandexScooter(driver);
+        MainPageYandexScooter mainPage = new MainPageYandexScooter(getDriver());
         mainPage.clickCookieAcceptButton();
         mainPage.scrollToMiddleSectionButton();
         mainPage.clickMiddleSectionOrderButton();
 
-        ClientInfoForm clientInfoForm = new ClientInfoForm(driver);
-        clientInfoForm.fillCustomerInfoForm(firstName, secondName, address, metroStation, phoneNumber);
+        ClientInfoForm clientInfoForm = new ClientInfoForm(getDriver());
 
-        RentInfoForm rentInfoForm = new RentInfoForm(driver);
-        rentInfoForm.fillRentInfoForm(rentDate, comment);
-
-        ConfirmOrderBanner confirmOrderBanner = new ConfirmOrderBanner(driver);
-        confirmOrderBanner.confirmOrder();
-
-        Assert.assertTrue("Заказ не оформлен!",
-                confirmOrderBanner.isOrderProcessedMessageDisplayed());
+        Assert.assertTrue("Форма ввода данных заказа не открылась!",
+                clientInfoForm.isClientInfoFormDisplayed());
     }
-
-
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
-
 }

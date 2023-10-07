@@ -1,17 +1,12 @@
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import page.object.model.MainPageYandexScooter;
 
 @RunWith(Parameterized.class)
-public class QuestionsAboutImportantThingsTest {
-
-    private WebDriver driver;
+public class QuestionsAboutImportantThingsTest extends YandexScooterTest {
 
     private final String question;
     private final String answer;
@@ -62,23 +57,12 @@ public class QuestionsAboutImportantThingsTest {
 
     @Test
     public void afterClickOnQuestionShowsAnswer() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
-        driver = new ChromeDriver(options);
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-
-        MainPageYandexScooter mainPage = new MainPageYandexScooter(driver);
+        MainPageYandexScooter mainPage = new MainPageYandexScooter(getDriver());
 
         mainPage.scrollToQuestions();
         mainPage.clickOnQuestion(question);
 
-        Assert.assertTrue("Something went wrong",
+        Assert.assertTrue("При нажатии на вопрос не появляется ответ!",
                 mainPage.isCorrespondingAnswerDisplayed(answer));
     }
-
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
-
 }
